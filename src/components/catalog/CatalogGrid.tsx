@@ -1,20 +1,22 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { CatalogCard } from "./CatalogCard";
 
-interface Chuteira {
+interface Product {
   id: string;
-  nome: string;
-  foto_url: string;
-  numeros_disponiveis: string[];
+  name: string;
+  image_url: string;
+  description: string | null;
+  price: number | null;
+  category_id: string | null;
 }
 
 interface CatalogGridProps {
-  chuteiras: Chuteira[];
+  products: Product[];
   isLoading: boolean;
   error: Error | null;
 }
 
-export const CatalogGrid = ({ chuteiras, isLoading, error }: CatalogGridProps) => {
+export const CatalogGrid = ({ products, isLoading, error }: CatalogGridProps) => {
   // Loading state com skeleton grid
   if (isLoading) {
     return (
@@ -46,7 +48,7 @@ export const CatalogGrid = ({ chuteiras, isLoading, error }: CatalogGridProps) =
   }
 
   // Empty state
-  if (chuteiras.length === 0) {
+  if (products.length === 0) {
     return (
       <div className="text-center py-8 sm:py-12 px-4">
         <div className="bg-muted/50 border border-border rounded-lg p-6 sm:p-8 max-w-md mx-auto">
@@ -64,10 +66,10 @@ export const CatalogGrid = ({ chuteiras, isLoading, error }: CatalogGridProps) =
   // Grid with products - 2 columns mobile, 3 tablet, 4 desktop
   return (
     <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
-      {chuteiras.map((chuteira, index) => (
+      {products.map((product, index) => (
         <CatalogCard 
-          key={chuteira.id} 
-          chuteira={chuteira} 
+          key={product.id} 
+          product={product} 
           index={index}
         />
       ))}

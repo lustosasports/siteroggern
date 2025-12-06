@@ -2,28 +2,27 @@ import { useState } from "react";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 
-interface Chuteira {
+interface Product {
   id: string;
-  nome: string;
-  foto_url: string;
-  numeros_disponiveis: string[];
+  name: string;
+  image_url: string;
+  description: string | null;
+  price: number | null;
+  category_id: string | null;
 }
 
 interface CatalogCardProps {
-  chuteira: Chuteira;
+  product: Product;
   index: number;
 }
 
-export const CatalogCard = ({ chuteira, index }: CatalogCardProps) => {
+export const CatalogCard = ({ product, index }: CatalogCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
   const handleWhatsApp = () => {
-    if (!selectedSize) return;
-    
     const phoneNumber = "5582999548018";
-    const message = `Olá, tenho interesse na chuteira ${chuteira.nome}, tamanho ${selectedSize}.`;
+    const message = `Olá, tenho interesse no produto ${product.name}.`;
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
     
     window.open(whatsappUrl, '_blank');
@@ -46,8 +45,8 @@ export const CatalogCard = ({ chuteira, index }: CatalogCardProps) => {
                   <div className="w-full h-full bg-muted animate-pulse" />
                 )}
                 <img
-                  src={chuteira.foto_url}
-                  alt={`Foto da chuteira ${chuteira.nome}`}
+                  src={product.image_url}
+                  alt={`Foto do produto ${product.name}`}
                   className={`w-full h-full object-cover transition-opacity duration-200 ${
                     imageLoaded ? 'opacity-100' : 'opacity-0'
                   }`}
@@ -73,12 +72,15 @@ export const CatalogCard = ({ chuteira, index }: CatalogCardProps) => {
         <DialogContent className="max-w-[95vw] sm:max-w-4xl w-full p-0 overflow-hidden rounded-xl sm:rounded-2xl">
           <div className="relative">
             <img
-              src={chuteira.foto_url}
-              alt={`Foto da chuteira ${chuteira.nome}`}
+              src={product.image_url}
+              alt={`Foto do produto ${product.name}`}
               className="w-full h-auto max-h-[70vh] sm:max-h-[80vh] object-contain"
             />
             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4 sm:p-6">
-              <h3 className="text-white text-base sm:text-xl font-semibold">{chuteira.nome}</h3>
+              <h3 className="text-white text-base sm:text-xl font-semibold">{product.name}</h3>
+              {product.price && (
+                <p className="text-white/80 text-sm sm:text-lg">R$ {product.price.toFixed(2)}</p>
+              )}
             </div>
           </div>
         </DialogContent>
@@ -88,36 +90,23 @@ export const CatalogCard = ({ chuteira, index }: CatalogCardProps) => {
         <h3 
           className="text-sm sm:text-base md:text-lg font-semibold text-foreground line-clamp-2 focus:ring-2 focus:ring-ring focus:outline-none mb-2"
           tabIndex={0}
-          title={chuteira.nome}
+          title={product.name}
         >
-          {chuteira.nome}
+          {product.name}
         </h3>
         
-        {/* Seleção de Tamanhos */}
-        <div className="mb-3 sm:mb-4">
-          <p className="text-xs sm:text-sm text-muted-foreground mb-2">Selecione o tamanho:</p>
-          <div className="flex flex-wrap gap-1.5 sm:gap-2">
-            {chuteira.numeros_disponiveis.map((numero) => (
-              <Button
-                key={numero}
-                variant={selectedSize === numero ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSelectedSize(selectedSize === numero ? null : numero)}
-                className="min-w-[36px] sm:min-w-[40px] h-8 sm:h-9 text-xs sm:text-sm font-medium transition-all duration-200 active:scale-95 sm:hover:scale-105 px-2"
-              >
-                {numero}
-              </Button>
-            ))}
-          </div>
-        </div>
+        {product.price && (
+          <p className="text-primary font-bold text-sm sm:text-base mb-3">
+            R$ {product.price.toFixed(2)}
+          </p>
+        )}
 
         {/* Botão COMPRAR */}
         <Button
           onClick={handleWhatsApp}
-          disabled={!selectedSize}
-          className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 disabled:bg-muted disabled:text-muted-foreground text-white font-semibold py-2 min-h-[44px] transition-all duration-200 text-sm sm:text-base"
+          className="w-full bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-semibold py-2 min-h-[44px] transition-all duration-200 text-sm sm:text-base"
         >
-          {selectedSize ? "COMPRAR" : "SELECIONE UM TAMANHO"}
+          COMPRAR
         </Button>
       </div>
     </div>
