@@ -3,20 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { useCatalog } from "@/hooks/useCatalog";
 import { Skeleton } from "@/components/ui/skeleton";
 
+const PLACEHOLDER_IMAGE = "/placeholder.svg";
+
 export const Products = () => {
   const navigate = useNavigate();
-  const { data: products, isLoading } = useCatalog();
+  const { data, isLoading } = useCatalog({ pageSize: 4 });
   
-  // Limitar a 4 produtos para os destaques
-  const destaques = products?.slice(0, 4) || [];
+  // Get first 4 products for highlights
+  const destaques = data?.products?.slice(0, 4) || [];
 
-  const handleWhatsApp = (productName: string) => {
-    const message = `Olá, vim pelo site e gostaria de saber mais sobre ${productName}`;
+  const handleWhatsApp = (productName: string, price?: number) => {
+    const priceText = price ? ` - R$ ${price.toFixed(2)}` : "";
+    const message = `Olá, vim pelo site e gostaria de saber mais sobre ${productName}${priceText}`;
     window.open(`https://wa.me/5582999548018?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   };
 
   const handleViewCatalog = () => {
     navigate("/catalogo");
+  };
+
+  const getImageUrl = (url: string | null | undefined) => {
+    return url && url.trim() !== "" ? url : PLACEHOLDER_IMAGE;
   };
 
   return (
@@ -41,6 +48,10 @@ export const Products = () => {
               </div>
             ))}
           </div>
+        ) : destaques.length === 0 ? (
+          <div className="text-center py-12 mb-8 sm:mb-16">
+            <p className="text-white/70 text-lg">Nenhum produto disponível no momento.</p>
+          </div>
         ) : (
           <>
             {/* Mobile & Tablet: 2-column grid */}
@@ -53,26 +64,29 @@ export const Products = () => {
                   {/* Product Image */}
                   <div className="aspect-square overflow-hidden rounded-lg sm:rounded-xl">
                     <img 
-                      src={produto.image_url} 
-                      alt={produto.name} 
+                      src={getImageUrl(produto.imagem_url)} 
+                      alt={produto.nome} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-smooth" 
-                      loading="lazy" 
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.src = PLACEHOLDER_IMAGE;
+                      }}
                     />
                   </div>
                   
                   {/* Product Info */}
                   <div className="p-2 sm:p-4">
                     <h3 className="text-sm sm:text-lg font-black text-secondary mb-1 sm:mb-2 uppercase tracking-wide line-clamp-2">
-                      {produto.name}
+                      {produto.nome}
                     </h3>
-                    {produto.price && (
+                    {produto.preco && (
                       <p className="text-muted-foreground text-xs sm:text-sm mb-2 sm:mb-4">
-                        R$ {produto.price.toFixed(2)}
+                        R$ {produto.preco.toFixed(2)}
                       </p>
                     )}
                     <Button 
                       variant="hero" 
-                      onClick={() => handleWhatsApp(produto.name)} 
+                      onClick={() => handleWhatsApp(produto.nome, produto.preco)} 
                       className="w-full text-xs sm:text-sm text-center min-h-[40px] sm:min-h-[44px]"
                     >
                       CONFERIR
@@ -92,26 +106,29 @@ export const Products = () => {
                   {/* Product Image */}
                   <div className="aspect-square overflow-hidden">
                     <img 
-                      src={produto.image_url} 
-                      alt={produto.name} 
+                      src={getImageUrl(produto.imagem_url)} 
+                      alt={produto.nome} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-smooth" 
-                      loading="lazy" 
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.src = PLACEHOLDER_IMAGE;
+                      }}
                     />
                   </div>
                   
                   {/* Product Info */}
                   <div className="p-6">
                     <h3 className="text-xl font-black text-secondary mb-2 uppercase tracking-wide">
-                      {produto.name}
+                      {produto.nome}
                     </h3>
-                    {produto.price && (
+                    {produto.preco && (
                       <p className="text-muted-foreground mb-4">
-                        R$ {produto.price.toFixed(2)}
+                        R$ {produto.preco.toFixed(2)}
                       </p>
                     )}
                     <Button 
                       variant="hero" 
-                      onClick={() => handleWhatsApp(produto.name)} 
+                      onClick={() => handleWhatsApp(produto.nome, produto.preco)} 
                       className="w-full text-sm text-center"
                     >
                       CONFERIR

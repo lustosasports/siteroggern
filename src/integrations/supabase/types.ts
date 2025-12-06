@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      bolsas: {
+        Row: {
+          categoria: string | null
+          created_at: string | null
+          id: string
+          imagem_url: string
+          nome: string
+          preco: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url: string
+          nome: string
+          preco: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url?: string
+          nome?: string
+          preco?: number
+        }
+        Relationships: []
+      }
+      caneleiras: {
+        Row: {
+          categoria: string | null
+          created_at: string | null
+          id: string
+          imagem_url: string
+          nome: string
+          preco: number
+          tamanhos: string
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url: string
+          nome: string
+          preco: number
+          tamanhos: string
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url?: string
+          nome?: string
+          preco?: number
+          tamanhos?: string
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -41,6 +98,96 @@ export type Database = {
           name?: string
           slug?: string
           updated_at?: string
+        }
+        Relationships: []
+      }
+      chuteiras_campo: {
+        Row: {
+          categoria: string | null
+          created_at: string | null
+          id: string
+          imagem_url: string
+          nome: string
+          numeracoes: string
+          preco: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url: string
+          nome: string
+          numeracoes: string
+          preco: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url?: string
+          nome?: string
+          numeracoes?: string
+          preco?: number
+        }
+        Relationships: []
+      }
+      chuteiras_futsal: {
+        Row: {
+          categoria: string | null
+          created_at: string | null
+          id: string
+          imagem_url: string
+          nome: string
+          numeracoes: string
+          preco: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url: string
+          nome: string
+          numeracoes: string
+          preco: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url?: string
+          nome?: string
+          numeracoes?: string
+          preco?: number
+        }
+        Relationships: []
+      }
+      chuteiras_society: {
+        Row: {
+          categoria: string | null
+          created_at: string | null
+          id: string
+          imagem_url: string
+          nome: string
+          numeracoes: string
+          preco: number
+        }
+        Insert: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url: string
+          nome: string
+          numeracoes: string
+          preco: number
+        }
+        Update: {
+          categoria?: string | null
+          created_at?: string | null
+          id?: string
+          imagem_url?: string
+          nome?: string
+          numeracoes?: string
+          preco?: number
         }
         Relationships: []
       }
