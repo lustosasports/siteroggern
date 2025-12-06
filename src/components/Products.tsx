@@ -5,14 +5,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export const Products = () => {
   const navigate = useNavigate();
-  const { data: chuteiras, isLoading } = useCatalog();
+  const { data: products, isLoading } = useCatalog();
   
   // Limitar a 4 produtos para os destaques
-  const destaques = chuteiras?.slice(0, 4) || [];
+  const destaques = products?.slice(0, 4) || [];
 
   const handleWhatsApp = (productName: string) => {
-    const message = `Olá, vim pelo site e gostaria de saber mais sobre a chuteira ${productName}`;
-    window.open(`https://wa.me/5586999999999?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
+    const message = `Olá, vim pelo site e gostaria de saber mais sobre ${productName}`;
+    window.open(`https://wa.me/5582999548018?text=${encodeURIComponent(message)}`, "_blank", "noopener,noreferrer");
   };
 
   const handleViewCatalog = () => {
@@ -27,7 +27,7 @@ export const Products = () => {
             NOSSOS <span className="text-primary">DESTAQUES</span>
           </h2>
           <p className="text-base sm:text-xl text-white/70 max-w-2xl mx-auto px-2">
-            Chuteiras selecionadas com qualidade garantida para elevar seu jogo
+            Produtos selecionados com qualidade garantida para elevar seu jogo
           </p>
         </div>
         
@@ -53,8 +53,8 @@ export const Products = () => {
                   {/* Product Image */}
                   <div className="aspect-square overflow-hidden rounded-lg sm:rounded-xl">
                     <img 
-                      src={produto.foto_url} 
-                      alt={produto.nome} 
+                      src={produto.image_url} 
+                      alt={produto.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-smooth" 
                       loading="lazy" 
                     />
@@ -63,14 +63,16 @@ export const Products = () => {
                   {/* Product Info */}
                   <div className="p-2 sm:p-4">
                     <h3 className="text-sm sm:text-lg font-black text-secondary mb-1 sm:mb-2 uppercase tracking-wide line-clamp-2">
-                      {produto.nome}
+                      {produto.name}
                     </h3>
-                    <p className="text-muted-foreground text-xs sm:text-sm mb-2 sm:mb-4 line-clamp-1">
-                      Tamanhos: {produto.numeros_disponiveis.join(', ') || 'Consultar'}
-                    </p>
+                    {produto.price && (
+                      <p className="text-muted-foreground text-xs sm:text-sm mb-2 sm:mb-4">
+                        R$ {produto.price.toFixed(2)}
+                      </p>
+                    )}
                     <Button 
                       variant="hero" 
-                      onClick={() => handleWhatsApp(produto.nome)} 
+                      onClick={() => handleWhatsApp(produto.name)} 
                       className="w-full text-xs sm:text-sm text-center min-h-[40px] sm:min-h-[44px]"
                     >
                       CONFERIR
@@ -90,8 +92,8 @@ export const Products = () => {
                   {/* Product Image */}
                   <div className="aspect-square overflow-hidden">
                     <img 
-                      src={produto.foto_url} 
-                      alt={produto.nome} 
+                      src={produto.image_url} 
+                      alt={produto.name} 
                       className="w-full h-full object-cover group-hover:scale-110 transition-smooth" 
                       loading="lazy" 
                     />
@@ -100,14 +102,16 @@ export const Products = () => {
                   {/* Product Info */}
                   <div className="p-6">
                     <h3 className="text-xl font-black text-secondary mb-2 uppercase tracking-wide">
-                      {produto.nome}
+                      {produto.name}
                     </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Tamanhos: {produto.numeros_disponiveis.join(', ') || 'Consultar'}
-                    </p>
+                    {produto.price && (
+                      <p className="text-muted-foreground mb-4">
+                        R$ {produto.price.toFixed(2)}
+                      </p>
+                    )}
                     <Button 
                       variant="hero" 
-                      onClick={() => handleWhatsApp(produto.nome)} 
+                      onClick={() => handleWhatsApp(produto.name)} 
                       className="w-full text-sm text-center"
                     >
                       CONFERIR

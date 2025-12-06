@@ -1,6 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { CatalogGrid } from "@/components/catalog/CatalogGrid";
-import { SizeFilter } from "@/components/catalog/SizeFilter";
 import { CategoryFilter } from "@/components/catalog/CategoryFilter";
 import { useCatalog } from "@/hooks/useCatalog";
 import { Button } from "@/components/ui/button";
@@ -8,22 +7,10 @@ import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 
-const CATEGORIES_WITH_NUMERACAO = ["campo", "futsal", "society"];
-const CATEGORIES_WITH_TAMANHO = ["caneleiras"];
-
 const Catalog = () => {
   const navigate = useNavigate();
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const { data: chuteiras = [], isLoading, error } = useCatalog(selectedSize || undefined);
-
-  // Reset size filter when category changes
-  useEffect(() => {
-    setSelectedSize(null);
-  }, [selectedCategory]);
-
-  const showNumeracaoFilter = selectedCategory && CATEGORIES_WITH_NUMERACAO.includes(selectedCategory);
-  const showTamanhoFilter = selectedCategory && CATEGORIES_WITH_TAMANHO.includes(selectedCategory);
+  const { data: products = [], isLoading, error } = useCatalog(selectedCategory || undefined);
 
   return (
     <div className="min-h-[100dvh] bg-background">
@@ -44,7 +31,7 @@ const Catalog = () => {
             Catálogo <span className="text-primary">Lustosa Sports</span>
           </h1>
           <p className="text-sm sm:text-lg text-muted-foreground max-w-2xl mx-auto px-2">
-            Chuteiras e materiais esportivos com qualidade garantida
+            Produtos esportivos com qualidade garantida
           </p>
         </header>
 
@@ -56,43 +43,18 @@ const Catalog = () => {
           />
         </div>
 
-        {/* Filtro de Numeração - apenas para CAMPO, FUTSAL, SOCIETY */}
-        {showNumeracaoFilter && (
-          <div className="mb-4 sm:mb-8">
-            <SizeFilter 
-              selectedSize={selectedSize}
-              onSizeSelect={setSelectedSize}
-              filterType="numeracao"
-            />
-          </div>
-        )}
-
-        {/* Filtro de Tamanho - apenas para CANELEIRAS */}
-        {showTamanhoFilter && (
-          <div className="mb-4 sm:mb-8">
-            <SizeFilter 
-              selectedSize={selectedSize}
-              onSizeSelect={setSelectedSize}
-              filterType="tamanho"
-            />
-          </div>
-        )}
-
         <main>
           {/* Contador de resultados */}
           {!isLoading && !error && (
             <div className="mb-4 sm:mb-6 text-center">
               <p className="text-sm sm:text-base text-muted-foreground">
-                {selectedSize 
-                  ? `${chuteiras.length} produto(s) encontrado(s) no tamanho ${selectedSize}`
-                  : `${chuteiras.length} produto(s) no catálogo`
-                }
+                {`${products.length} produto(s) no catálogo`}
               </p>
             </div>
           )}
           
           <CatalogGrid 
-            chuteiras={chuteiras} 
+            products={products} 
             isLoading={isLoading} 
             error={error} 
           />

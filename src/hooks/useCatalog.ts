@@ -1,25 +1,33 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
-interface Chuteira {
+interface Product {
   id: string;
-  nome: string;
-  foto_url: string;
-  numeros_disponiveis: string[];
+  name: string;
+  image_url: string;
+  description: string | null;
+  price: number | null;
+  category_id: string | null;
 }
 
-export const useCatalog = (numeroFiltro?: string) => {
+export const useCatalog = (categoryFilter?: string) => {
   return useQuery({
-    queryKey: ["chuteiras", numeroFiltro],
-    queryFn: async (): Promise<Chuteira[]> => {
-      // Buscar chuteiras do Supabase
-      const { data, error } = await supabase
-        .from('chuteiras')
+    queryKey: ["products", categoryFilter],
+    queryFn: async (): Promise<Product[]> => {
+      let query = supabase
+        .from('products')
         .select('*')
-        .order('nome', { ascending: true });
+        .eq('is_active', true)
+        .order('name', { ascending: true });
+
+      if (categoryFilter) {
+        query = query.eq('category_id', categoryFilter);
+      }
+
+      const { data, error } = await query;
 
       if (error) {
-        console.error('Erro ao buscar chuteiras:', error);
+        console.error('Erro ao buscar produtos:', error);
         throw error;
       }
 
@@ -27,23 +35,15 @@ export const useCatalog = (numeroFiltro?: string) => {
         return [];
       }
 
-      // Transformar os dados do Supabase para o formato esperado
-      const chuteiras: Chuteira[] = data.map((item) => ({
-        id: item.id.toString(),
-        nome: item.nome,
-        foto_url: item.url_imagem || '',
-        numeros_disponiveis: item.tamanho ? item.tamanho.split(',').map(t => t.trim()) : []
+      return data.map((item) => ({
+        id: item.id,
+        name: item.name,
+        image_url: item.image_url || '',
+        description: item.description,
+        price: item.price,
+        category_id: item.category_id,
       }));
-
-      // Aplicar filtro de numeração se especificado
-      if (numeroFiltro) {
-        return chuteiras.filter(chuteira => 
-          chuteira.numeros_disponiveis.includes(numeroFiltro)
-        );
-      }
-
-      return chuteiras;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutos de cache
+    staleTime: 5 * 60 * 1000,
   });
 };
